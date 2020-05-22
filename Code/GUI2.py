@@ -7,18 +7,16 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import navigation
 import sportEquipment
-
-'''import soundEquipment
-import navigation
+import slamMap
+import soundEquipment
+#import microPhone
+'''import navigation
 import sportEquipment
 import microPhone
 import camera'''
 SYS=False
 USR=False
-'''bnt1=None
-bnt2=None
-bnt3=None
-bnt4=None'''
+
 target_x=0
 target_y=0
 # 第1步，实例化object，建立窗口window
@@ -30,7 +28,8 @@ window.title('ROS机器人控制程序')
 # 第3步，设定窗口的大小(长 * 宽)
 window.geometry('400x300')  # 这里的乘是小x
  
-# 第4步，加载 wellcome image
+# 第4步，加载 welcome image
+
 canvas = tk.Canvas(window, width=400, height=135, bg='white')
 image_file = tk.PhotoImage(file='logo.png')
 image = canvas.create_image(200, 0, anchor='n', image=image_file)
@@ -53,37 +52,53 @@ var_usr_pwd = tk.StringVar()
 entry_usr_pwd = tk.Entry(window, textvariable=var_usr_pwd, font=('Arial', 14), show='*')
 entry_usr_pwd.place(x=120,y=215)
 
-def build_map():
-    global bnt1,bnt2,bnt3
-    '''os.system("gnome-terminal -e 'bash -c \"cd demo2_ws; exec bash\"'")
-    time.sleep(2)
-    os.system("gnome-terminal -e 'bash -c \"roslaunch wpr_simulation wpb_simple.launch; exec bash\"'")
-    time.sleep(2)
-    os.system("gnome-terminal -e 'bash -c \"roslaunch wpb_home_tutorials hector_mapping.launch; exec bash\"'")#打开slam建图
-    time.sleep(2)
-    os.system("gnome-terminal -e 'bash -c \"rosrun wpr_simulation keyboard_vel_ctrl; exec bash\"'")'''
-    bnt1.pack_forget()
-    bnt2.pack_forget()
-    bnt3.pack_forget()
-    spt_ep=sportEquipment.sportEquipment()
-    bnt1=tk.Button(window,text="向前加速",command=spt_ep.towards)
-    bnt1.pack()
-    bnt3=tk.Button(window,text="向左加速",command=spt_ep.left)
-    bnt3.pack(side=tk.LEFT)
-    bnt4=tk.Button(window,text="向右加速",command=spt_ep.right)
-    bnt4.pack(side=tk.RIGHT)
+
+
+def build_map():  #还有一些按钮没有实现
+    def stop_map(top,spt_ep):
+        top.destroy()
+        spt_ep.stop()
+    def buildmap_info():
+        tkinter.messagebox.showinfo(title='提示', message='请控制机器人绕场一周，使得不存在灰色区域')
+        
+    m=slamMap.slamMap()
+    m.buildMap()
+    image_info = tk.PhotoImage(file='info.gif')
     
-    bnt2=tk.Button(window,text="向后加速",command=spt_ep.backward)
-    bnt2.pack()
-    bnt5=tk.Button(window,text="刹车",command=spt_ep.move_pause)
-    bnt5.pack(side=tk.LEFT)
-    bnt6=tk.Button(window,text="退出",command=spt_ep.end)
-    bnt6.pack(side=tk.RIGHT)
+    top = tk.Toplevel()
+    spt_ep=sportEquipment.sportEquipment()
+    btninfo=tk.Button(top,width=20,height=20,image=image_info,command=buildmap_info)
+    btninfo.grid(row=0,column=2)
+    bnt1=tk.Button(top,text="向前加速",command=spt_ep.towards)
+    bnt1.grid(row=1,column=1)
+    #bnt1.pack()
+    bnt3=tk.Button(top,text="向左加速",command=spt_ep.left)
+    bnt3.grid(row=2,column=0)
+    #bnt3.pack(side=tk.LEFT)
+    bnt4=tk.Button(top,text="向右加速",command=spt_ep.right)
+    bnt4.grid(row=2,column=2)
+    #bnt4.pack(side=tk.RIGHT)
+    bnt2=tk.Button(top,text="向后加速",command=spt_ep.backward)
+    bnt2.grid(row=3,column=1)
+    #bnt2.pack()
+    bnt5=tk.Button(top,text="左旋加速",command=spt_ep.pause)
+    bnt5.grid(row=4,column=0)
+    #bnt5.pack(side=tk.LEFT)
+    bnt6=tk.Button(top,text="右旋加速",command=spt_ep.stop)
+    bnt6.grid(row=4,column=2)
+    #bnt6.pack(side=tk.RIGHT)
+    bnt7=tk.Button(top,text="刹车",command=spt_ep.stop)
+    bnt7.grid(row=5,column=0)
+    #bnt7.pack()
+    bnt8=tk.Button(top,text="退出",command=lambda:stop_map(top,spt_ep))
+    bnt8.grid(row=5,column=2)
+    #bnt8.pack()
+    top.mainloop()
+    
         
 
 def voice_ctl():
-
-    pass
+    soundEquipment.
 
 
 def load_map():
@@ -92,38 +107,25 @@ def load_map():
     plt.imshow(image)
     
 def get_target():  #设置目标点，
+    def back(surwin):
+        surwin.destroy()
+        get_target()
+    
     pos=plt.ginput(1)
     target_x=pos[0][0]
     target_y=pos[0][1]
-    surewin=tk.Tk()
-    surewin.title('确定选择该终点？')
-    surewin.geometry('400x300')
+    surewin=tk.Toplevel()
+    surewin.title("确定选择该终点？")
     bnt1=tk.Button(surewin,text="确定",command=surewin.destroy)
-    bnt1.pack()
-    bnt2=tk.Button(surewin,text="返回",command=get_target)
-    bnt2.pack()
+    bnt1.pack(side=tk.LEFT)
+    bnt2=tk.Button(surewin,text="返回",command=lambda:back(surewin))
+    bnt2.pack(side=tk.RIGHT)
     surewin.mainloop()
-def towards():
-    pass
 
-def sys_menu():
-    SYS=True
-    build_map()
-def move_pause():
-    sp_eq=sportEquipment.sportEquipment()
-    sp_eq.move_pause()
+
     
     
-def usr_menu():
-##    global bnt1,bnt2,bnt3
-##    USR=True
-##    canvas.delete()
-##    bnt1.pack_forget()
-##    bnt2.pack_forget()
-##    bnt3.pack_forget()
-    
-    #bnt1=tk.Button(window,text='语音控制',command=voice_ctl)
-    #bnt1.pack()
+def navigate():
     load_map()
     get_target()
     nav=navigation.navigation()
@@ -132,49 +134,21 @@ def usr_menu():
     surewin=tk.Tk()
     surewin.title('开始进行')
     surewin.geometry('400x300')
-    bnt1=tk.Button(surewin,text="暂停",command=sp_eq.move_pause)
+    bnt1=tk.Button(surewin,text="暂停",command=sp_eq.pause)
     bnt1.pack()
-    bnt2=tk.Button(surewin,text="停止",command=sp_eq.stop_move)
+    bnt2=tk.Button(surewin,text="停止",command=sp_eq.stop)
     bnt2.pack()
     surewin.mainloop()
    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 def menu():
     global bnt1,bnt2,bnt3
-    '''window = tk.Tk()  有问题
-    # 第2步，给窗口的可视化起名字
-    window.title('Wellcome to Hongwei Website')
- 
-    # 第3步，设定窗口的大小(长 * 宽)
-    window.geometry('400x300')  # 这里的乘是小x
-    canvas = tk.Canvas(window, width=400, height=135, bg='white')
-    image = canvas.create_image(200, 0, anchor='n', image=image_file)
-    canvas.pack(side='top')
-    tk.Label(window, text='四个乙方',font=('Arial', 16)).pack()'''
-    #tk.Label(window, text='请选择：',font=('Arial', 8)).pack(side=LEFT)
-    bnt1=tk.Button(window, text='用户视图', command=usr_menu)
+    bnt1=tk.Button(window, text='SLAM建图', command=build_map)
     bnt1.pack()
-    bnt2=tk.Button(window,text='系统视图',command=sys_menu)
+    bnt2=tk.Button(window,text='导航',command=navigate)
     bnt2.pack()
     bnt3=tk.Button(window,text='语音控制',command=voice_ctl)
-    bnt3.pack()
-    
-    
-    
-  
-    
+    bnt3.pack()    
  
 # 第8步，定义用户登录功能
 def usr_login():
@@ -279,6 +253,8 @@ btn_login.place(x=120, y=240)
 bnt1=bnt2=bnt3=bnt4=bnt5=bnt6=btn_login
 btn_sign_up = tk.Button(window, text='Sign up', command=usr_sign_up)
 btn_sign_up.place(x=200, y=240)
- 
+#image_info = tk.PhotoImage(file='info.gif')
+#btninfo=tk.Button(window,width=10,height=10,image=image_info)
+#btninfo.place(x=280,y=240)
 # 第10步，主窗口循环显示
 window.mainloop()

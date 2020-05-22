@@ -1,18 +1,19 @@
+import sys
 class sportEquipment:
     def towards(self):
-        pass
+        sys.stdout('w\n')
     def backward(self):
-        pass
+        sys.stdout('s\n')
     def left(self):
         pass
     def right(self):
         pass
     def end(self):
-        pass
+        return
     def backward(self):
         pass
-    def move_pause(self):
+    def pause(self):
         pass
-    def stop_move(self):
+    def stop(self):
         pass
 
