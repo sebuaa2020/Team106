@@ -1,0 +1,16 @@
+<launch>
+
+    <node pkg="voice_ctrl" type="my_asr" name="my_asr" output="screen"/> 
+    
+    <node pkg="voice_ctrl" type="my_tts" name="my_tts_node" /> 
+    
+    <node pkg="voice_ctrl" type="my_voice_cmd" name="my_voice_cmd" output="screen"/>
+
+    <!-- Run sound_play -->
+    <node name="soundplay_node" pkg="sound_play" type="soundplay_node.py"/>
+
+
+    <!-- Run wpb_home core -->
+    
+
+</launch>
