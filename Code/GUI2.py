@@ -38,16 +38,19 @@ image = canvas.create_image(200, 0, anchor='n', image=image_file)
 canvas.pack(side='top')
 tk.Label(window, text='四个乙方',font=('Arial', 16)).pack()
 image_info = tk.PhotoImage(file='info.gif')
-
-def main_info():
+def log_info():
     def message(t,m):
         tk.messagebox.showinfo(title=t,message=m)
-    helps=['功能介绍','slam建图','导航','联系我们']
-    messages=['请选择slam建图或者导航',
-              'slam建图用于建立当前所在空间的地图',
-              '导航用于控制机器人到指定的目标点\n'+'导航之前需要确定是否曾经保存过当前区域的地图\n'+'如果没有，请先选择slam建图',
+    helps=['功能介绍','注册','登录','联系我们']
+    messages=['本系统可语音控制机器人运动，手动控制机器人运动，给机器人指定目标点运动\n',
+              '输入未注册过的用户名信息，设置相应密码即可注册\n',
+              '输入已注册的用户名信息、对应密码即可登录系统\n',
               '开发人员信息      邮箱\n'+
-              '章玉婷            17231087@buaa.edu.cn']
+              '章玉婷           17231087@buaa.edu.cn\n'+
+              '王兆桓           31891579@qq.com\n'+
+              '龚申勇           17373284@buaa.edu.cn\n'+
+              '陈雪青           1413247807@qq.com\n'+
+              '图图             simbamatutu@buaa.edu.cn\n']
     top=tk.Toplevel()
     bnt1=tk.Button(top,text=helps[0],command=lambda:message(helps[0],messages[0]))
     bnt1.pack()
@@ -57,9 +60,12 @@ def main_info():
     bnt3.pack()
     bnt4=tk.Button(top,text=helps[3],command=lambda:message(helps[3],messages[3]))
     bnt4.pack()
+  
+
+
     
 
-mb = tk.Button(window,width=10,height=10,image=image_info,command=main_info)
+mb = tk.Button(window,width=10,height=10,image=image_info,command=log_info)
 mb.place(x=380,y=0)
 #mb = tk.Button(window,width=10,height=10,image=image_info,command=lambda:main_info(helps,messages)) 
 
@@ -259,9 +265,35 @@ def navigateType():
 def voice_ctl():
     soundE=soundEquipment.soundEquipment()
     soundE.start()
-    
+def main_info():
+    def message(t,m):
+        tk.messagebox.showinfo(title=t,message=m)
+    helps=['功能介绍','slam建图','导航','语音控制','联系我们']
+    messages=['点击本界面按钮，即可选择slam建图或者导航或者语音控制功能',
+              'slam建图用于建立当前所在空间的地图',
+              '导航用于控制机器人到指定的目标点\n'+'导航之前需要确定是否曾经保存过当前区域的地图\n'+'如果没有，请先选择slam建图',
+              '语音控制用于语音控制机器人运动\n',
+              '开发人员信息      邮箱\n'+
+              '章玉婷           17231087@buaa.edu.cn\n'+
+              '王兆桓           31891579@qq.com\n'+
+              '龚申勇           17373284@buaa.edu.cn\n'+
+              '陈雪青           1413247807@qq.com\n'+
+              '图图             simbamatutu@buaa.edu.cn\n']
+    top=tk.Toplevel()
+    bnt1=tk.Button(top,text=helps[0],command=lambda:message(helps[0],messages[0]))
+    bnt1.pack()
+    bnt2=tk.Button(top,text=helps[1],command=lambda:message(helps[1],messages[1]))
+    bnt2.pack()
+    bnt3=tk.Button(top,text=helps[2],command=lambda:message(helps[2],messages[2]))
+    bnt3.pack()
+    bnt4=tk.Button(top,text=helps[3],command=lambda:message(helps[3],messages[3]))
+    bnt4.pack()
+    bnt5=tk.Button(top,text=helps[4],command=lambda:message(helps[4],messages[4]))
+    bnt5.pack()   
 def menu():
     global bnt1,bnt2,bnt3
+    mb = tk.Button(window,width=10,height=10,image=image_info,command=main_info)
+    mb.place(x=380,y=0)
     bnt1=tk.Button(window, text='SLAM建图', command=build_map)
     bnt1.pack()
     bnt2=tk.Button(window,text='导航',command=navigateType)
