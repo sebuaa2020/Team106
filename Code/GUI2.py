@@ -12,7 +12,7 @@ import sportEquipment
 import slamMap
 import soundEquipment
 #import microPhone
-import navigation
+#import navigation
 import sportEquipment
 import microphone
 import camera
@@ -49,13 +49,13 @@ def main_info():
               '开发人员信息      邮箱\n'+
               '章玉婷            17231087@buaa.edu.cn']
     top=tk.Toplevel()
-    bnt1=tk.Button(top,text=helps[0],command=message(helps[0],messages[0]))
+    bnt1=tk.Button(top,text=helps[0],command=lambda:message(helps[0],messages[0]))
     bnt1.pack()
-    bnt2=tk.Button(top,text=helps[1],command=message(helps[1],messages[1]))
+    bnt2=tk.Button(top,text=helps[1],command=lambda:message(helps[1],messages[1]))
     bnt2.pack()
-    bnt3=tk.Button(top,text=helps[2],command=message(helps[2],messages[2]))
+    bnt3=tk.Button(top,text=helps[2],command=lambda:message(helps[2],messages[2]))
     bnt3.pack()
-    bnt4=tk.Button(top,text=helps[3],command=message(helps[3],messages[3]))
+    bnt4=tk.Button(top,text=helps[3],command=lambda:message(helps[3],messages[3]))
     bnt4.pack()
     
 
@@ -82,21 +82,73 @@ var_usr_pwd = tk.StringVar()
 entry_usr_pwd = tk.Entry(window, textvariable=var_usr_pwd, font=('Arial', 14), show='*')
 entry_usr_pwd.place(x=120,y=215)
 
-def build_map():  #还有一些按钮没有实现
+def bulid_map_voice(topp):
+    def save_map():
+        
+        top.destroy()
+        
+        m.save_map()
+    topp.destroy()
+    top=tk.Toplevel()
+    top.title("语音控制开启")
+    tk.Label(top, text="请通过语音控制控制机器人绕场一周，使得rviz地图中不存在灰色区域\n"+
+    "之后可选择保存地图 or 不保存地图\n"
+    "可输入语音指令关键词代表信息：\n"+
+    "前——机器人前进\n"+
+    "后——机器人后退\n"+
+    "左——机器人向左转\n"+
+    "右——机器人向右转\n"+
+    "停——机器人停止运动\n",font=('Arial', 8)).pack()
+    bnt1=tk.Button(top,text="保存地图",command=save_map)
+    bnt1.pack(side=tk.LEFT)
+    bnt2=tk.Button(top,text="不保存地图",command=top.destroy)
+    bnt2.pack(side=tk.RIGHT)
+    
+    m=slamMap.slamMap()
+    m.buildMap()
+    time.sleep(1)
+    soundE=soundEquipment.soundEquipment()
+    soundE.start()
+    
+
+def quit_save(topw):
+    top=tk.Toplevel()
+    top.time("sure?")
+    bnt1=tk.Button(top,text="sure",command=(top.destroy and topw.destroy))
+    bnt1.pack()
+    bnt2=tk.Button(top,text="cancel",command=top.destroy)
+    bnt2.pack()
+    
+def build_map_manual(topp):  #还有一些按钮没有实现
+    def save_map():
+        
+        top.destroy()
+        
+        m.save_map()
+
     def stop_map(top,spt_ep):
         top.destroy()
         spt_ep.stop()
-    def buildmap_info():
-        tkinter.messagebox.showinfo(title='提示', message='请控制机器人绕场一周，使得不存在灰色区域')
-        
+        topw=tk.Toplevel()
+        topw.title('提示')
+        label=tk.Label(topw,text="是否保存地图？",font=('Arial', 8))
+        label.pack()
+        bnt1=tk.Button(topw,text="是",command=save_map)
+        bnt1.pack(side=tk.LEFT)
+        bnt2=tk.Button(topw,text="否",command=topw.destroy)
+        bnt2.pack(side=tk.RIGHT)
+
+    def buildmap_manual_info():
+        tkinter.messagebox.showinfo(title='提示', message='请通过按钮控制机器人绕场一周，使得rviz地图中不存在灰色区域')
+    topp.destroy()  
     m=slamMap.slamMap()
     m.buildMap()
-    image_info = tk.PhotoImage(file='info.gif')
     
     top = tk.Toplevel()
     
     spt_ep=sportEquipment.sportEquipment()
-    btninfo=tk.Button(top,width=20,height=20,image=image_info,command=buildmap_info)
+    spt_ep.start()
+    btninfo=tk.Button(top,width=20,height=20,image=image_info,command=buildmap_manual_info)
     btninfo.grid(row=0,column=2)
     bnt1=tk.Button(top,text="向前加速",command=spt_ep.towards)
     bnt1.grid(row=1,column=1)
@@ -123,75 +175,90 @@ def build_map():  #还有一些按钮没有实现
     bnt8.grid(row=5,column=2)
     
     top.mainloop()
-    
-        
-def navigation(targetx,targety):
+def build_map():
+    top=tk.Toplevel()
+    top.title("选择控制机器人类型")
+    bnt1=tk.Button(top,text="ＧＵＩ按钮控制",command=lambda:build_map_manual(top))  
+    bnt1.pack()
+    bnt2=tk.Button(top,text="语音控制",command=lambda:bulid_map_voice(top))
+    bnt2.pack() 
+    top.mainloop()
+def navigation1():
     nav=navigation.navigation()
     nav.navigate()
     sp_eq=sportEquipment.sportEquipment()
+    os.system("rosrun wpr_simulation keyboard_vel_ctrl")
     #surewin=tk.Tk()
-    surewin=tk.Toplevel()
+    '''surewin=tk.Toplevel()
     surewin.title('开始进行')
     surewin.geometry('400x300')
-    bnt1=tk.Button(surewin,text="暂停",command=sp_eq.pause)
+    sp_eq.start()#start control
+    bnt1=tk.Button(surewin,text="暂停",command=sp_eq.pause)#???
     bnt1.pack()
-    bnt2=tk.Button(surewin,text="停止",command=sp_eq.stop)
+    bnt2=tk.Button(surewin,text="停止",command=sp_eq.stop)#???
     bnt2.pack()
-    surewin.mainloop()
+    surewin.mainloop()'''
     
     
-def manual_ctrl():
-    def load_map():  #加载当前地图
-        path=os.getcwd()+'\maps\example.png'
-        image=Image.open(path)
-        plt.imshow(image)
-    
-    def get_target():  #手动设置目标点，
-        def back(surwin):
-            surwin.destroy()
-            get_target()
-    
-        pos=plt.ginput(1)
-        target_x=pos[0][0]
-        target_y=pos[0][1]
-        surewin=tk.Toplevel()
-        surewin.title("确定选择该终点？")
-        bnt1=tk.Button(surewin,text="确定",command=surewin.destroy)
-        bnt1.pack(side=tk.LEFT)
-        bnt2=tk.Button(surewin,text="返回",command=lambda:back(surewin))
-        bnt2.pack(side=tk.RIGHT)
-        surewin.mainloop()
-    load_map()
-    get_target()
-    navigation(targetx,targety)
+
    
 def navigateType():
-    def navigate_info():
-        pass       
+    def navigate_info():  #hai mei xie 
+        pass 
+    def manual_ctrl():
+        '''def load_map():  #加载当前地图
+            path=os.getcwd()+'/maps/map.pgm'
+            image=Image.open(path)
+            plt.imshow(image)
+    
+        def get_target():  #手动设置目标点，
+            def back(surwin):
+                surwin.destroy()
+                get_target()
+    
+            pos=plt.ginput(1)
+            target_x=pos[0][0]
+            target_y=pos[0][1]
+            surewin=tk.Toplevel()
+            surewin.title("确定选择该终点？")
+
+            bnt1=tk.Button(surewin,text="确定",command=surewin.destroy)
+            bnt1.pack(side=tk.LEFT)
+            print(target_x,target_y)
+            bnt2=tk.Button(surewin,text="返回",command=lambda:back(surewin))
+            bnt2.pack(side=tk.RIGHT)
+            surewin.mainloop()'''
+        top.destroy()
+        #load_map()
+        #get_target()
+        navigation1()      
     def voice_ctrl():  
-        
+        top.destroy()
         mic=microphone.microphone()
         item=mic.voice2text()
         sep=soundEquipment()
-        sep.play(item)  #确定是否是该物品
+        sep.play(item)  #确定是否是该物品，如何将
         targetx,targety=camera.anaylse(item)
         str1="经分析该物体在"+str(targetx)+str(targety)+"位置,是否确定选择该终点"
         sep.play(str1)
         ans=mic.voice2text()
         if ans=="是":
-            navigation(targetx,targety)
+            navigation1(targetx,targety)
         else:
             voice_ctrl()  
         
         
-    top=tk.toplevel()
-    
-    btninfo=tk.Button(window,width=10,height=10,image=image_info,command=navigate_info)  #导航信息提示
+    top=tk.Toplevel()
+    top.title("导航类型选取")
+    btninfo=tk.Button(top,width=10,height=10,image=image_info,command=navigate_info)  #导航信息提示
     btninfo.place(x=280,y=10)
-    btn1=tk.Button(window,text="手动选取目标点",command=manual_ctrl)
+    btn1=tk.Button(top,text="手动选取目标点",command=manual_ctrl)
     btn1.pack()
-    btn2=tk.Button(window,text="语音选取目标点",command=voice_ctrl)
+    btn2=tk.Button(top,text="语音选取目标点",command=voice_ctrl)
     btn2.pack()
+def voice_ctl():
+    soundE=soundEquipment.soundEquipment()
+    soundE.start()
     
 def menu():
     global bnt1,bnt2,bnt3
@@ -199,8 +266,8 @@ def menu():
     bnt1.pack()
     bnt2=tk.Button(window,text='导航',command=navigateType)
     bnt2.pack()
-    #bnt3=tk.Button(window,text='语音控制',command=voice_ctl)
-    #bnt3.pack()    
+    bnt3=tk.Button(window,text='语音控制',command=voice_ctl)
+    bnt3.pack()    
  
 # 第8步，定义用户登录功能
 def usr_login():
