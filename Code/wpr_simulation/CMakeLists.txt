@@ -215,8 +215,18 @@ include_directories(
 add_executable(keyboard_vel_ctrl
   src/keyboard_vel_ctrl.cpp
 )
+
 add_dependencies(keyboard_vel_ctrl ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(keyboard_vel_ctrl
   ${catkin_LIBRARIES}
 )
+add_executable(simple_home_cruise
+  src/simple_home_cruise.cpp
+  
+)
+add_dependencies(simple_home_cruise ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(simple_home_cruise
+  ${catkin_LIBRARIES}
+)
+
 
