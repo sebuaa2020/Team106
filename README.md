@@ -24,11 +24,11 @@ sudo apt-get install python3-tk
 
 ### 源码获取
 
-在home目录下新建文件夹demo2_ws
+在home目录下新建文件夹demo2_sc
 
 git clone git@github.com:sebuaa2020/Team106.git
 
-然后在～/demo2_ws/src/code下执行python3 GUI2.py
+然后在～/demo2_sc/code/src/code下执行python3 GUI2.py
 
 然后就会进入，用户名输入123,密码456，点击login按钮就能进入
 点击SLAM建图，就会打开rviz，gazebo界面
