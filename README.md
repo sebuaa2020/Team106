@@ -30,25 +30,9 @@ git clone git@github.com:sebuaa2020/Team106.git
 
 然后在～/demo2_ws/src/code下执行python3 GUI2.py
 
-![img](file:///C:/Users/27221/AppData/Local/Packages/microsoft.office.desktop_8wekyb3d8bbwe/AC/%23!oice_16_974fa576_32c1d314_1905/Temp/msohtmlclip1/01/clip_image002.jpg)
+然后就会进入，用户名输入123,密码456，点击login按钮就能进入
+点击SLAM建图，就会打开rviz，gazebo界面
 
-
-
-然后就会进入这，用户名输入123,密码456，点击login按钮就能进入图3
-
-<img src="file:///C:/Users/27221/AppData/Local/Packages/microsoft.office.desktop_8wekyb3d8bbwe/AC/%23!oice_16_974fa576_32c1d314_1905/Temp/msohtmlclip1/01/clip_image004.jpg" alt="img" style="zoom:33%;" />
-
- 																						图2
-
-点击SLAM建图，就会打开rviz，gazebo界面，如图4
-
-![img](file:///C:\Users\27221\AppData\Local\Temp\ksohtml14824\wps1.jpg)
-
-​																							图4
-
- 
-
- 
 
 ### 功能特性
 
@@ -68,9 +52,6 @@ git clone git@github.com:sebuaa2020/Team106.git
 语音控制机器人运动
 
 
-### 项目代码结构
-
-![img](file:///C:\Users\27221\AppData\Local\Temp\ksohtml14824\wps2.jpg)
 
 ### 项目管理
 
