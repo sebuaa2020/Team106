@@ -174,7 +174,7 @@ def build_map_manual(topp):  #还有一些按钮没有实现
     bnt6=tk.Button(top,text="右旋加速",command=spt_ep.ri_acc)
     bnt6.grid(row=4,column=2)
     
-    bnt7=tk.Button(top,text="刹车",command=spt_ep.stop)
+    bnt7=tk.Button(top,text="刹车",command=spt_ep.pause)
     bnt7.grid(row=5,column=0)
     
     bnt8=tk.Button(top,text="退出",command=lambda:stop_map(top,spt_ep))
@@ -193,7 +193,7 @@ def navigation1():
     nav=navigation.navigation()
     nav.navigate()
     sp_eq=sportEquipment.sportEquipment()
-    os.system("rosrun wpr_simulation keyboard_vel_ctrl")
+    #os.system("rosrun wpr_simulation keyboard_vel_ctrl")
     #surewin=tk.Tk()
     '''surewin=tk.Toplevel()
     surewin.title('开始进行')
@@ -238,8 +238,23 @@ def navigateType():
         #load_map()
         #get_target()
         navigation1()      
-    def voice_ctrl():  
+    def constant_nav():
+        def start_constant_nav():
+            topw.destroy()
+            os.system("gnome-terminal -e 'bash -c \"rosrun wpr_simulation simple_home_cruise; exec bash\"'")
         top.destroy()
+        os.system("gnome-terminal -e 'bash -c \"roslaunch wpr_simulation wpb_navigation.launch; exec bash\"'")
+        
+        time.sleep(10)
+        topw=tk.Toplevel()
+        topw.title("提示")
+        tk.Label(topw,text="是否选取好了机器人初始点，”是“则开始连续导航，否则请继续选择初始点",font=('Arial', 10)).pack()
+        tk.Button(topw,text="是",command=start_constant_nav).pack()
+
+        #time.sleep(1)
+       
+
+        '''top.destroy()
         mic=microphone.microphone()
         item=mic.voice2text()
         sep=soundEquipment()
@@ -251,16 +266,16 @@ def navigateType():
         if ans=="是":
             navigation1(targetx,targety)
         else:
-            voice_ctrl()  
-        
+            voice_ctrl()  '''
+      
         
     top=tk.Toplevel()
     top.title("导航类型选取")
     btninfo=tk.Button(top,width=10,height=10,image=image_info,command=navigate_info)  #导航信息提示
     btninfo.place(x=280,y=10)
-    btn1=tk.Button(top,text="手动选取目标点",command=manual_ctrl)
+    btn1=tk.Button(top,text="手动选择目标",command=manual_ctrl)
     btn1.pack()
-    btn2=tk.Button(top,text="语音选取目标点",command=voice_ctrl)
+    btn2=tk.Button(top,text="连续航点导航",command=constant_nav)
     btn2.pack()
 def voice_ctl():
     soundE=soundEquipment.soundEquipment()
