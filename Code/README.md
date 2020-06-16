@@ -47,4 +47,4 @@ ROS 机器人具有语音控制功能，该功能在此文件夹中实现。 该
 
 ### 系统测试
 
-我们对机器人进行了各种测试，其中一些文件（例如`test.py`，`test_keyboard_vel.cpp`）专门用于系统测试。
+我们对机器人进行了各种测试，其中一些文件（例如`test_home_cruise.py`，`test_keyboard_vel.cpp`）专门用于系统测试。
